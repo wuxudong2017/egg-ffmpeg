@@ -17,11 +17,10 @@ class AppBootHook {
   }
 
   async didLoad() {
-    // const { app } = this
-    // console.log(app.config.bull.app)
-    // if (app.config.bull.app) {
-    //   bull(app);
-    // }
+    const { app } = this
+    if (app.config.bull.app) {
+      bull(app);
+    }
     // 所有的配置已经加载完毕
     // 可以用来加载应用自定义的文件，启动自定义的服务；
  
@@ -33,7 +32,7 @@ class AppBootHook {
     //   this.app.loader.loadToContext(path.join(__dirname, 'app/tasks'), 'tasks', {
     //     fieldClass: 'tasksClasses',
     //   });
-    console.log('------did load ======')
+    // console.log('------did load ======')
   }
 
   async willReady() {
@@ -51,12 +50,11 @@ class AppBootHook {
     //   const ctx = await this.app.createAnonymousContext();
     //   await ctx.service.Biz.request();
 
-    const { app } = this
-    console.log(app.config.bull.app)
-    if (app.config.bull.app) {
-      bull(app);
-    }
-    console.log('-------启动完毕---------')
+    // const { app } = this
+    // if (app.config.bull.app) {
+    //   bull(app);
+    // }
+    // console.log('-------启动完毕---------')
   }
 
   async serverDidReady() {
@@ -67,7 +65,7 @@ class AppBootHook {
     //     // handle socket timeout
     //   });
    
-    console.log('----http server 已经启动-----')
+    // console.log('----http server 已经启动-----')
   }
 }
 

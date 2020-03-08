@@ -36,74 +36,30 @@ function createBull(config, app) {
 }
 
 function loadBullToApp(app, queue, topic) {
-  const dir = path.join(app.config.baseDir, 'app/bull');
-  fs.readdir(dir,function(error,file){
-    if(error)  fs.mkdirSync(dir);
-    const fileDir = path.join(dir,topic+'.js');
-    fs.readFile(fileDir,(err,state)=>{
-      if(err) fs.writeFileSync(fileDir,`module.exports = {
-        status:{
-            completed:async ()=>{
-    
-            },
-            failed:async ()=>{
-            
-            },
-            waiting:async ()=>{
-            
-            },
-            active:async ()=>{
-            
-            },
-            stalled:async ()=>{
-            
-            },
-            progress:async ()=>{
-            
-            },
-            paused:async ()=>{
-            
-            },
-            resumed:async ()=>{
-            
-            },
-            cleaned:async ()=>{
-            
-            },
-            drained:async ()=>{
-            
-            },
-            removed:async ()=>{
-            
-            },
-        },
-    
-        handle:async()=>{
-    
-        },
-    }`,{encoding:'utf-8'});
-    })
+  const dir = path.join(app.config.baseDir, 'app/bulls');
+  fs.readdir(dir, function (error, file) {
+    if (error) fs.mkdirSync(dir);
   })
   fs.stat(dir, (error, stats) => {
     if (error) app.coreLogger.error(`[egg-bull] ${error.message} `);
     if (stats.isDirectory()) {
-      app.loader.loadToApp(dir, topic, {
+      app.loader.loadToApp(dir, 'bulls', {
         caseStyle: 'lower',
         ignore: 'lib/**',
       });
-      // queue
-      //   .on('completed', app['bull'].status.completed)
-      //   .on('failed', app['bull'].status.failed)
-      //   .on('waiting', app['bull'].status.waiting)
-      //   .on('active', app['bull'].status.active)
-      //   .on('stalled', app['bull'].status.stalled)
-      //   .on('progress', app['bull'].status.progress)
-      //   .on('paused', app['bull'].status.paused)
-      //   .on('resumed', app['bull'].status.resumed)
-      //   .on('cleaned', app['bull'].status.cleaned)
-      //   .on('drained', app['bull'].status.drained)
-      //   .on('removed', app['bull'].status.removed)
-      //   .process('*', app['bull'].handle);
+      queue
+        .on('completed', app.bulls[topic].status.completed)
+        .on('failed', app.bulls[topic].status.failed)
+        .on('waiting', app.bulls[topic].status.waiting)
+        .on('active', app.bulls[topic].status.active)
+        .on('stalled', app.bulls[topic].status.stalled)
+        .on('progress', app.bulls[topic].status.progress)
+        .on('paused', app.bulls[topic].status.paused)
+        .on('resumed', app.bulls[topic].status.resumed)
+        .on('cleaned', app.bulls[topic].status.cleaned)
+        .on('drained', app.bulls[topic].status.drained)
+        .on('removed', app.bulls[topic].status.removed)
+        .process('*', app.bulls[topic].handle);
     } else {
       app.coreLogger.error(`[egg-bull] directory ${dir} is not exist `);
     }

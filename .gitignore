@@ -1,4 +1,5 @@
 logs/
+app/public/video/
 npm-debug.log
 yarn-error.log
 node_modules/
@@ -10,5 +11,6 @@ run/
 .DS_Store
 *.sw*
 *.un~
+*.zip
 typings/
 .nyc_output/

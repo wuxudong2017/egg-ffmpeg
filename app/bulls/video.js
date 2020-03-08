@@ -1,14 +1,12 @@
-/*
- * @Description: 
- * @Version: 1.0
- * @Autor: 吴旭东
- * @Date: 2020-03-07 17:50:19
- */
-'use strict'
 module.exports = {
     handle: async (job, done) => {
         // 任务处理函数
-        return done;
+        try {
+            console.log(job)
+            return done();
+        } catch (err) {
+            return done(new Error(err))
+        }
     },
     status: {
         waiting: async (jobId) => {
@@ -47,8 +45,5 @@ module.exports = {
         drained: async () => {
 
         },
-
     },
-
-
 }

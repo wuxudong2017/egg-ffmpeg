@@ -5,12 +5,19 @@
  * @Date: 2020-03-07 16:26:51
  */
 'use strict';
+const {transcode} = require('./ffmpeg');
 const Bull = require('bull');
 module.exports = {
+  /**
+   * @description: 任务添加队列方法
+   * @param {array} jobs 队列数组 
+   * @return: 
+   */
   async addJobToQueue(jobs) {
     
     const { logger } = this;
     return new Promise((resolve, reject) => {
+      // console.log(this.bull)
       Promise.all(
         jobs.map(item => {
           return new Promise((resolve, reject) => {
@@ -40,10 +47,29 @@ module.exports = {
         })
         .catch(error => {
           logger.error(
-            `[egg-bull] Jobs add failed ! Because of ${error.message}`
+            `[egg-bull] Jobs add failed ! Because of ${error}`
           );
           reject(error);
         });
     });
   },
+/**
+ * @description: 转码服务 
+ * @param {type} 
+ * @return: 
+ */  
+   ffmpegFun(){
+    return new  Promise((resolve,reject)=>{
+      try{
+        transcode({filePath:'E:/0Egg/egg-ffmpeg/app/public/video/4.mp4',_id:'123'});
+        resolve()
+
+
+      }catch(err){
+        reject(err)
+      }
+    })
+  }
+
+
 };

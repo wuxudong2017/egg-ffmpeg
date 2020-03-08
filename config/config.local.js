@@ -1,5 +1,5 @@
 'use strict';
-
+const path = require('path')
 module.exports = appInfo => {
   const config = {};
 
@@ -52,8 +52,7 @@ module.exports = appInfo => {
     // or Use the same redis configuration
     //
     clients: {
-      queue1: { topic: 'queue1' },
-      queue2: { topic: 'queue2' },
+      queue1: { topic: 'video' },
     },
     default: {
       queueOptions: {
@@ -67,6 +66,12 @@ module.exports = appInfo => {
     },
     app:true,
     agent:false
+  }
+  config.view = {
+    root:[path.join(appInfo.baseDir,'app/view')].join(','),
+    mapping:{
+      '.html':'nunjucks'
+    }
   }
 
 
