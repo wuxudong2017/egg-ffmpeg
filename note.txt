@@ -1,0 +1,43 @@
+原始视频文件目录为 /public/source/video 文件目录中
+转码后的文件存放目录为  /public/transcode/video 文件目录中
+480p /public/transcode/video/{uuid}/480/
+720p /public/transcode/video/{uuid}/720/
+
+视频要有清晰度限制,360,480,720 视频分辨率
+视频数据字段:{
+url, //文件原始url 路径
+size/文件大小
+contentType, //文件类型(视频,图片)
+originalName, //文件源命名
+folderName, //文件目录名
+suffix, //文件后缀名
+convertFile, //转码后的文件名
+thumbnail, //缩略图
+}
+
+
+文件上传数据信息:
+    {
+      "url": "http://10.95.33.21:3003/v1/file?d=%2Fa&n=a.txt",
+      "size": 0,
+      "contentType": "text/plain",
+      "originalName": "a",
+      "folderName": "/a",
+      "suffix": "txt",
+      "convertFile": "http://10.95.33.21:3003/v1/file?d=%2Fa/convert&n=a.pdf",
+      "thumbnail": "http://10.95.33.21:3003/v1/file?d=%2Fa/convert&n=a.jpg"
+    }
+{ 
+"url": url, // 文件原始url 路径
+ "size": size, //文件大小
+ "contentType": contentT`/
+ ype, // 文件类型(视频,图片)
+ "originalName": strFileName, // 文件源命名
+ "folderName": folderName, // 文件目录名
+ "suffix": name, // 文件后缀名
+ "convertFile": convertUrl, // 转码后的文件名
+ "thumbnail": thumbnailUrl // 缩略图
+ }
+
+
+

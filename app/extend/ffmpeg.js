@@ -8,7 +8,7 @@ const Jimp = require('jimp');
 const path = require('path')
 const setting = {
     antiurl: ['dsasdfasddfs'],
-    host: 'hh',
+    host: '/',
     hd: '480', // 清晰度
     antiredirect: 'https://ffmpeg.moejj.com/kk',
     encryptionKey: '123456', // ts 加密秘钥
@@ -28,7 +28,7 @@ const setting = {
 exports.transcode = function (movie) {
     const  filePath = movie.filePath;
     const  id = movie._id;
-    const  outpath = 'app/public/videos/';
+  
     const  des =path.join(__dirname,'../public/video',id) ;
     const  videoarr = filePath.split(".");
     videoarr.pop();
@@ -125,7 +125,7 @@ exports.transcode = function (movie) {
             '-f hls'
         ];
         if (tsjiami == 'on') {
-            fs.writeFileSync(des + "/key.info", setting.host + "/videos/" + id + "/ts.key\n" + des + "/ts.key");
+            fs.writeFileSync(des + "/key.info", setting.host + "/video/" + id + "/ts.key\n" + des + "/ts.key");
             let key = randomkey();
             fs.writeFileSync(des + "/ts.key", key);
             let jiamiconfig = '-hls_key_info_file ' + des + '/key.info';
