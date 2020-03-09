@@ -14,9 +14,8 @@ const setting = {
     encryptionKey: '123456', // ts 加密秘钥
     SEC: 'on', // 秒切
     screenshots: 2, // 切图数量
-    watermarkPath: './public/mark/mark.png', // 水印的地址
+    watermarkPath:path.join(__dirname,'../','/public/mark/mark.png') , // 水印的地址
     api: 'on',
-    __v: 1,
     tsjiami: 'on'
 }
 
@@ -25,7 +24,7 @@ const setting = {
  * @param {object} movie  {filePath:存放地址,_id:唯一标识}
  * @return  {function}
  */
-exports.transcode = async function (movie) {
+exports.transcode = function (movie) {
     const filePath = movie.filePath;
     const id = movie._id;
     const des = path.join(__dirname, '../public/video', id);
@@ -49,7 +48,7 @@ exports.transcode = async function (movie) {
             let wmimage = setting.watermarkPath;
             let hd = setting.hd * 1;
             let wd = 0;
-            let markdir = "./public/mark/mark.png";
+            let markdir = path.join(__dirname,'../','/public/mark/mark.png');
             let videometa = metadata.format;
             let videostreams = metadata.streams;
             let bitrate = Math.floor(videometa.bit_rate / 1000);
@@ -65,7 +64,7 @@ exports.transcode = async function (movie) {
             if (!wmimage || wmimage == "") {
                 wmimage = markdir;
             }
-            let vf = 'movie=' + wmimage + ' [watermark]; [in][watermark] overlay=main_w-overlay_w [out]';
+            let vf = 'movie=' + wmimage + ' [watermark]; [in][watermark] overlay=10:10:1 [out]';
             if (hd == 480) {
                 wd = 720;
             } else if (hd == 1080) {
@@ -106,7 +105,7 @@ exports.transcode = async function (movie) {
             size = wd + "x" + hd;
             let srtexists = fs.existsSync(srtpath);
             if (srtexists) {
-                vf = 'movie=' + wmimage + ' [watermark]; [in][watermark] overlay=main_w-overlay_w,subtitles=' + srtpath + '[out]';
+                vf = 'movie=' + wmimage + ' [watermark]; [in][watermark] overlay=10:10:1,subtitles=' + srtpath + '[out]';
             }
             config = [
                 '-s ' + size,
@@ -131,6 +130,7 @@ exports.transcode = async function (movie) {
                 let jiamiconfig = '-hls_key_info_file ' + des + '/key.info';
                 config.push(jiamiconfig);
             }
+            console.log(vf)
             if (setting.miaoqie == "on") {
                 if (videooriginH <= setting.hd * 1 && videooriginC == "h264" && audiooriginC == "aac") {
                     if (srtexists) {
@@ -138,7 +138,7 @@ exports.transcode = async function (movie) {
                             resolve(res)
                         });
                     } else {
-                        // chunk(filePath, des, id, config, vf, tsjiami);
+                        chunk(filePath, des, id, config, vf, tsjiami);
                     }
                 } else {
                     ffmpegtransandchunk(des, filePath, config, vf, id).then(res => {
@@ -164,7 +164,6 @@ exports.transcode = async function (movie) {
  */
 function ffmpegtransandchunk(des, filePath, config, vf) {
     return new Promise((resolve, reject) => {
-
         ffmpeg(filePath)
             .addOptions(config)
             // .addOption('-vf', vf)
@@ -215,34 +214,38 @@ function screenshots(filePath, des) {
   * @return: 
   */
 function chunk(filePath, des, config, vf, tsjiami) {
-    let chunkconfig = [
-        '-c copy',
-        '-bsf:v h264_mp4toannexb',
-        '-hls_time 20',
-        '-strict -2',
-        '-start_number 0',
-        '-hls_list_size 0'
-    ];
-    if (tsjiami == 'on') {
-        chunkconfig.push('-hls_key_info_file ' + des + '/key.info');
-    }
-    ffmpeg(filePath)
-        .addOptions(chunkconfig).output(des + "/index.m3u8")
-        .on('end', function () {
-            screenshots(filePath, des);
-            console.log('开始转码')
-        })
-        .on('error', function (err, stdout, stderr) {
-            console.log('Cannot chunk video: ' + filePath + err.message);
-            deleteall(des);
-            fs.mkdirSync(des);
-            ffmpegtransandchunk(des, filePath, config, vf, id);
-        })
-        .on("start", function () {
-            console.log('切片完成')
-            //    切片完成
-        })
-        .run()
+    return new Promise((resolve, reject) => {
+        let chunkconfig = [
+            '-c copy',
+            '-bsf:v h264_mp4toannexb',
+            '-hls_time 20',
+            '-strict -2',
+            '-start_number 0',
+            '-hls_list_size 0'
+        ];
+        if (tsjiami == 'on') {
+            chunkconfig.push('-hls_key_info_file ' + des + '/key.info');
+        }
+        ffmpeg(filePath)
+            .addOptions(chunkconfig)
+            // .addOption('-vf',vf)
+            .output(des + "/index.m3u8")
+
+            .on('error', function (err, stdout, stderr) {
+                reject(err)
+                deleteall(des);
+                fs.mkdirSync(des);
+                ffmpegtransandchunk(des, filePath, config, vf, id);
+            })
+            .on("start", function () {
+                console.log('切片完成')
+                //    切片完成
+            }).on('end', function () {
+                screenshots(filePath, des);
+                resolve()
+            })
+            .run()
+    })
 }
 /**
  * @description: 删除所有
@@ -300,6 +303,40 @@ function thumbnails(des, filePath) {
             });
         });
 }
+/**
+ * @description 只进行转码服务,不切片
+ * @param {type} 
+ * @return: 
+ */
+function ffmpegtrans(path, des, size, bv, bufsize, maxrate, vf, id, cb) {
+    return new Promise((resolve, reject) => {
+        ffmpeg(path)
+            .addOptions([
+                '-s ' + size,
+                '-b:v ' + bv,
+                '-vcodec libx264',
+                '-acodec aac',
+                '-ac 2',
+                '-b:a 128k',
+                '-bufsize ' + bufsize,
+                '-maxrate ' + maxrate,
+                '-q:v 6',
+                '-strict -2'
+            ])
+            // .addOption('-vf', vf)
+            .output(des + '/index.mp4')
+            .on('start', cb)
+            .on('error', function (err, stdout, stderr) {
+                console.log('Cannot process video: ' + path + err.message);
+                reject(err)
+            })
+            .on('end', function () {
+                resolve();
+            })
+            .run()
+    })
+}
+
 // 生成随机数
 function randomkey() {
     let data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "A", "B", "C", "D", "E", "F", "G"];

@@ -44,7 +44,7 @@ class HomeController extends Controller {
     // 获取 steam
     const stream = await ctx.getFileStream();
     const fields = stream.fields;
-    const {folderName='other'} = fields;
+    const folderName = fields.folderName||'other';
     const originalname = stream.filename;
     const name =md5(uuid()) 
     const filename = name+path.extname(originalname);

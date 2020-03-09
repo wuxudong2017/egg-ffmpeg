@@ -73,12 +73,12 @@ module.exports = appInfo => {
       '.html': 'nunjucks'
     }
   }
-  // config.mongoose = {
-  //   client: {
-  //     url: 'mongodb://127.0.0.1:27017/egg_ffmepg',
-  //     options: {},
-  //   },
-  // };
+  config.mongoose = {
+    client: {
+      url: 'mongodb://127.0.0.1:27017/egg_ffmepg',
+      options: {},
+    },
+  };
   config.security = {
     csrf: {
       enable: false
