@@ -58,18 +58,14 @@ module.exports = {
  * @param {type} 
  * @return: 
  */  
-   ffmpegFun(){
+   ffmpegFun(params){
     return new  Promise((resolve,reject)=>{
       try{
-        transcode({filePath:'E:/0Egg/egg-ffmpeg/app/public/video/4.mp4',_id:'123'});
+        transcode(params);
         resolve()
-
-
       }catch(err){
         reject(err)
       }
     })
   }
-
-
 };

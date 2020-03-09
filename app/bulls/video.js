@@ -1,10 +1,14 @@
+
+const { transcode } = require('../extend/ffmpeg');
 module.exports = {
     handle: async (job, done) => {
         // 任务处理函数
         try {
-            console.log(job)
+            const data = JSON.parse(JSON.stringify(job.data))
+            await transcode(data)
             return done();
         } catch (err) {
+            console.log(err)
             return done(new Error(err))
         }
     },
@@ -24,10 +28,12 @@ module.exports = {
         },
         completed: async (job, result) => {
             // A job successfully completed with a `result`.
+            console.log('complete----->' + result)
         },
 
         failed: async (job, err) => {
             // A job failed with reason `err`!
+            console.log('failed----->' + err)
         },
         paused: async () => {
             // The queue has been paused.停止所有任务
