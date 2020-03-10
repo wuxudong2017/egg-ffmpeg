@@ -17,6 +17,7 @@ thumbnail, //缩略图
 
 文件上传数据信息:
     {
+      "_id":ObjectId,
       "url": "http://10.95.33.21:3003/v1/file?d=%2Fa&n=a.txt",
       "size": 0,
       "contentType": "text/plain",

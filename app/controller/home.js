@@ -68,6 +68,7 @@ class HomeController extends Controller {
       await sendToWormhole(stream);
       throw err;
     }
+    const result = await ctx.model.File.create({filePath:target,name,})
     // 文件上传完成加入转码队列
     await app.addJobToQueue([{
       topic: 'video',

@@ -11,15 +11,16 @@ module.exports = app => {
   router.get('/upload',controller.home.uploadGet)
   router.post('/upload',controller.home.uploadPost)
   // 队列操作
-  router.get('/jobList',controller.bull.index.jobList)
-  // 删除队列任务
-  router.delete('/jobEmpty',controller.bull.index.jobEmpty)
-  // 删除队列某个任务
-  router.delete('/jobRemove/:jobId',controller.bull.index.jobRemove)
-   // 重试队列某个任务
-   router.put('/jobRetry/:jobId',controller.bull.index.jobRetry)
-  // 获取任务信息
-  router.get('/jobInfo/:jobId',controller.bull.index.jobInfo)
-  // 暂停某个任务
-  router.put('/jobPause/:jobId',controller.bull.index.jobPause)
+  router.get('/jobList',controller.bull.jobList)
+  // // 删除队列任务
+  router.delete('/jobEmpty',controller.bull.jobEmpty)
+  // // 删除队列某个任务
+  router.delete('/jobRemove/:jobId',controller.bull.jobRemove)
+  //  // 重试队列某个任务
+   router.put('/jobRetry/:jobId',controller.bull.jobRetry)
+  // // 获取任务信息
+  router.get('/jobInfo/:jobId',controller.bull.jobInfo)
+  // // 暂停某个任务
+  router.put('/jobPause/:jobId',controller.bull.jobPause)
+
 };

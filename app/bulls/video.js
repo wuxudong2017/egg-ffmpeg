@@ -39,6 +39,7 @@ module.exports = {
             console.log('/**************complete****************/')
             console.log(result)
             console.log('/******************************/')
+            // 队列转码完成开始进程数据操作
         },
         waiting: async (jobId) => {
             // 当前等待的jobId
