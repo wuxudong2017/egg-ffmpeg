@@ -28,6 +28,8 @@ class HomeController extends Controller {
     }];
     // await app.addJobToQueue(jobs);
     // await this.app.ffmpegFun({ filePath: 'G:/0Egg/my/egg-ffmpeg/app/public/video/a.mkv', _id: '123' })
+  let result =  await this.app.getQueue('queue1');
+  console.log(result)
     ctx.body = 'hi, egg';
   }
   async player() {
@@ -74,7 +76,7 @@ class HomeController extends Controller {
         filePath:target,
         _id:name
       },
-      name: '转码队列',
+      name: '视频转码队列',
     }])
 
 

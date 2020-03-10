@@ -23,47 +23,52 @@ module.exports = appInfo => {
     // },
     //
     // Multiple queue (recommended)
-    //
-    // clients: {
-    //   queue1: {
-    //     topic: 'queue1',
-    //     queueOptions: {
-    //       redis: {
-    //         host: 'localhost',
-    //         port: 6379,
-    //         db: 1,
-    //         password: 'Pass1234',
-    //       },
-    //     },
-    //   },
-    //   queue2: {
-    //     topic: 'queue2',
-    //     queueOptions: {
-    //       redis: {
-    //         host: 'localhost',
-    //         port: 6379,
-    //         db: 2,
-    //         password: 'Pass1234',
-    //       },
-    //     },
-    //   },
-    // },
+
+    clients: {
+      queue1: {
+        topic: 'video',
+        queueOptions: {
+          redis: {
+            host: '127.0.0.1',
+            port: 6379,
+            db: 6,
+            password: '',
+          },
+          limiter: {
+            max: 1,      // Max number of jobs processed
+            duration: 1000 * 30, // per duration in milliseconds
+            bounceBack: false// When jobs get rate limited, they stay in the waiting queue and are not moved to the delayed queue
+          },
+        },
+      },
+      // queue2: {
+      //   topic: 'queue2',
+      //   queueOptions: {
+      //     redis: {
+      //       host: 'localhost',
+      //       port: 6379,
+      //       db: 2,
+      //       password: 'Pass1234',
+      //     },
+      //   },
+      // },
+    },
     //
     // or Use the same redis configuration
     //
-    clients: {
-      queue1: { topic: 'video' },
-    },
-    default: {
-      queueOptions: {
-        redis: {
-          host: 'localhost',
-          port: 6379,
-          db: 6,
-          password: '',
-        },
-      },
-    },
+    // clients: {
+    //   queue1: { topic: 'video' },
+    // },
+    // default: {
+    //   queueOptions: {
+    //     redis: {
+    //       host: 'localhost',
+    //       port: 6379,
+    //       db: 6,
+    //       password: '',
+    //     },
+    //   },
+    // },
     app: true,
     agent: false
   }

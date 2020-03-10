@@ -5,8 +5,14 @@
  * @Date: 2020-03-07 16:26:51
  */
 'use strict';
-const {transcode} = require('./ffmpeg');
+const { transcode } = require('./ffmpeg');
 const Bull = require('bull');
+let opts_ffmpeg = {
+  timeout: 1200 * 1000,
+  delay: 3 * 1000,
+  attempts: 5,
+  backoff: { type: 'exponential', delay: 60000 }
+}
 module.exports = {
   /**
    * @description: 任务添加队列方法
@@ -14,22 +20,16 @@ module.exports = {
    * @return: 
    */
   async addJobToQueue(jobs) {
-    
     const { logger } = this;
     return new Promise((resolve, reject) => {
       // console.log(this.bull)
       Promise.all(
         jobs.map(item => {
           return new Promise((resolve, reject) => {
-            const { queue, name, data, opts } = item;
-            let _queue;
-            if (this.bull instanceof Bull) {
-              _queue = this.bull;
-            } else if (this.bull.get(queue) instanceof Bull) {
-              _queue = this.bull.get(queue);
-            } else {
-              reject('get Queue instance failed !');
-            }
+            let { queue, name, data, opts } = item;
+            opts = Object.assign(opts_ffmpeg, opts)
+            let _queue = this.getQueue(queue)
+
             _queue
               .add(name, data, opts)
               .then(job => {
@@ -53,17 +53,28 @@ module.exports = {
         });
     });
   },
-/**
- * @description: 转码服务 
- * @param {type} 
- * @return: 
- */  
-   ffmpegFun(params){
-    return new  Promise((resolve,reject)=>{
-      try{
+  getQueue(queue) {
+    let _queue;
+    if (this.bull instanceof Bull) {
+      _queue = this.bull;
+    } else if (this.bull.get(queue) instanceof Bull) {
+      _queue = this.bull.get(queue);
+    } else {
+      throw new Error('get Queue instance failed !');
+    }
+    return _queue
+  },
+  /**
+   * @description: 转码服务 
+   * @param {type} 
+   * @return: 
+   */
+  ffmpegFun(params) {
+    return new Promise((resolve, reject) => {
+      try {
         transcode(params);
         resolve()
-      }catch(err){
+      } catch (err) {
         reject(err)
       }
     })

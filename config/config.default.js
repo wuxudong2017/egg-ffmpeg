@@ -16,13 +16,18 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1583568428772_5320';
 
   // add your middleware config here
-  config.middleware = [];
+ config.middleware = ['responseHeader',];
+ config.responseHeader={
+   ignore:['/upload','/index/.*']
+ }
 
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
   };
-
+  config.cors = {
+    origin:"*"
+  }
   return {
     ...config,
     ...userConfig,

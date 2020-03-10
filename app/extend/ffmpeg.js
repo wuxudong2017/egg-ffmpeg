@@ -14,7 +14,7 @@ const setting = {
     encryptionKey: '123456', // ts 加密秘钥
     SEC: 'on', // 秒切
     screenshots: 2, // 切图数量
-    watermarkPath:path.join(__dirname,'../','/public/mark/mark.png') , // 水印的地址
+    watermarkPath: path.join(__dirname, '../', '/public/mark/mark.png'), // 水印的地址
     api: 'on',
     tsjiami: 'on'
 }
@@ -48,7 +48,7 @@ exports.transcode = function (movie) {
             let wmimage = setting.watermarkPath;
             let hd = setting.hd * 1;
             let wd = 0;
-            let markdir = path.join(__dirname,'../','/public/mark/mark.png');
+            let markdir = path.join(__dirname, '../', '/public/mark/mark.png');
             let videometa = metadata.format;
             let videostreams = metadata.streams;
             let bitrate = Math.floor(videometa.bit_rate / 1000);
@@ -130,7 +130,6 @@ exports.transcode = function (movie) {
                 let jiamiconfig = '-hls_key_info_file ' + des + '/key.info';
                 config.push(jiamiconfig);
             }
-            console.log(vf)
             if (setting.miaoqie == "on") {
                 if (videooriginH <= setting.hd * 1 && videooriginC == "h264" && audiooriginC == "aac") {
                     if (srtexists) {
@@ -150,7 +149,6 @@ exports.transcode = function (movie) {
                     resolve(res)
                 });
             }
-
         })
     })
 }
@@ -169,7 +167,6 @@ function ffmpegtransandchunk(des, filePath, config, vf) {
             // .addOption('-vf', vf)
             .output(des + '/index.m3u8')
             .on('start', function (cmd) {
-
                 console.log(cmd)
                 console.log('转码并切片开始')
             })
@@ -183,9 +180,7 @@ function ffmpegtransandchunk(des, filePath, config, vf) {
                 console.log('转码并切片完成')
             })
             .run()
-
     })
-
 }
 /**
  * @description: 截图方法
@@ -273,7 +268,6 @@ function deleteall(filePath) {
  * @param {string} filePath 视频文件地址 
  */
 function thumbnails(des, filePath) {
-
     let tmp = des + '/dplayer-thumbnails';
     let output = des + '/thumbnails.jpg';
     ffmpeg(filePath)
@@ -344,7 +338,6 @@ function randomkey() {
         let result = "";
         for (let i = 0; i < 16; i++) {
             r = Math.floor(Math.random() * data.length);
-
             result += data[r];
         }
         return result;
