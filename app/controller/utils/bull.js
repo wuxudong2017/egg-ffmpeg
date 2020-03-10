@@ -58,7 +58,7 @@ class IndexController extends Controller {
         }
     }
     // 查看某个任务
-    async jobRetry() {
+    async jobInfo() {
         const { ctx, app } = this;
         const { queue } = ctx.request.query;
         const { jobId } = ctx.params;

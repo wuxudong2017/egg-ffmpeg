@@ -42,6 +42,9 @@ exports.transcode = function (movie) {
     });
     return new Promise((resolve, reject) => {
         ffmpeg.ffprobe(filePath, function (err, metadata) {
+            console.log('---------------------')
+            console.log(metadata)
+            console.log('---------------------')
             if (err) {
                 reject(err);
             }
