@@ -18,7 +18,7 @@ module.exports = appInfo => {
   // add your middleware config here
  config.middleware = ['responseHeader',];
  config.responseHeader={
-   ignore:['/upload','/index/.*']
+   ignore:['/upload','/index']
  }
 
   // add your user config here

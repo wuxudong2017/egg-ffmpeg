@@ -16,7 +16,6 @@ module.exports = {
         active: async (job, jobPromise) => {
             // A job has started. You can use `jobPromise.cancel()`` to abort it.
             console.log('/**************active****************/')
-            console.log(job)
             console.log(jobPromise)
             console.log('/******************************/')
         },
@@ -25,6 +24,7 @@ module.exports = {
             // workers that crash or pause the event loop.
             console.log('/**************stalled****************/')
             console.log(job)
+           
             console.log('/******************************/')
         },
         progress: async (job, progress) => {
@@ -39,13 +39,13 @@ module.exports = {
             console.log('/**************complete****************/')
             console.log(result)
             console.log('/******************************/')
-            // 队列转码完成开始进程数据操作
         },
         waiting: async (jobId) => {
             // 当前等待的jobId
             console.log('/**************waiting****************/')
             console.log(jobId)
             console.log('/******************************/')
+            
         },
         failed: async (job, err) => {
             // A job failed with reason `err`!
@@ -53,9 +53,11 @@ module.exports = {
             console.log(job)
             console.log(err)
             console.log('/******************************/')
+            
         },
         paused: async () => {
             // The queue has been paused.停止所有任务
+            
         },
         resumed: async (job) => {
             // The queue has been resumed.
@@ -77,7 +79,6 @@ module.exports = {
             console.log('/**************removed****************/')
             console.log(job)
             console.log('/******************************/')
-            
         },
         drained: async () => {
 
