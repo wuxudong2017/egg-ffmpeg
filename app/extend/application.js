@@ -5,7 +5,7 @@
  * @Date: 2020-03-07 16:26:51
  */
 'use strict';
-const { transcode } = require('./ffmpeg');
+const { transcode } = require('./ffmpegA');
 const Bull = require('bull');
 let opts_ffmpeg = {
   timeout: 1200 * 1000,
@@ -13,6 +13,20 @@ let opts_ffmpeg = {
   attempts: 5,
   backoff: { type: 'exponential', delay: 60000 }
 }
+const path = require('path')
+const setting = {
+  antiurl: ['dsasdfasddfs'],
+  host: 'http://localhost:7001/',
+  hd: '480', // 清晰度
+  antiredirect: 'https://ffmpeg.moejj.com/kk',
+  encryptionKey: '123456', // ts 加密秘钥
+  SEC: 'on', // 秒切
+  screenshots: 2, // 切图数量
+  watermarkPath: path.join(__dirname, '../', '/public/mark/mark.png'), // 水印的地址
+  api: 'on',
+  tsjiami: 'on'
+}
+
 module.exports = {
   /**
    * @description: 任务添加队列方法
@@ -69,14 +83,13 @@ module.exports = {
    * @param {type} 
    * @return: 
    */
-  ffmpegFun(params) {
-    return new Promise((resolve, reject) => {
-      try {
-        transcode(params);
-        resolve()
-      } catch (err) {
-        reject(err)
-      }
-    })
+  async ffmpeg(params) {
+    try{
+      const setting = await this.model.Setting.find();
+     const result =  await transcode(params,setting[0]);
+     return result
+    }catch(error){
+      throw Error(error)
+    }
   }
 };
