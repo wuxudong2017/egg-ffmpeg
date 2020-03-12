@@ -1,11 +1,4 @@
 'use strict';
-const fs = require('fs');
-const path = require('path');
-const awaitStreamReady = require('await-stream-ready').write;
-const uuid = require('uuid/v1');
-const md5 = require('md5')
-//管道读入一个虫洞。
-const sendToWormhole = require('stream-wormhole');
 const Controller = require('egg').Controller;
 class HomeController extends Controller {
   async index() {

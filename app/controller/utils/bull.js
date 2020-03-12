@@ -13,9 +13,9 @@ class IndexController extends Controller {
             asc = query.asc || true,
             types = query.types || 'completed';
         const typesArr = types.split(',');
-        const row = await app.getQueue(queue).getJobs(typesArr, (offset - 1) * limit, offset * limit - 1, asc)
+        const rows = await app.getQueue(queue).getJobs(typesArr, (offset - 1) * limit, offset * limit - 1, asc)
         const count = await app.getQueue(queue).getJobCounts()
-        ctx.success({ row, count })
+        ctx.success({ rows, count })
     }
     // 清空所有队列任务
     async jobEmpty() {

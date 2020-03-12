@@ -84,11 +84,17 @@ module.exports = {
    * @return: 
    */
   async ffmpeg(params) {
-    try{
+    try {
       const setting = await this.model.Setting.find();
-     const result =  await transcode(params,setting[0]);
-     return result
-    }catch(error){
+      const result = await transcode(params, setting[0]);
+      let status;
+      if (result.code == 200) {
+        status = 'completed'
+      } else {
+        status = 'failed'
+      }
+      await this.model.File.update({ _id: params._id }, { status })
+    } catch (error) {
       throw Error(error)
     }
   }

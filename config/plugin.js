@@ -6,16 +6,20 @@ module.exports = {
   // static: {
   //   enable: true,
   // }
-  nunjucks:{
-    enable:true,
-    package:'egg-view-nunjucks'
+  nunjucks: {
+    enable: true,
+    package: 'egg-view-nunjucks'
   },
   mongoose: {
     enable: true,
     package: 'egg-mongoose',
   },
-  cors:{
-    enable:true,
-    package:'egg-cors'
-  }
+  cors: {
+    enable: true,
+    package: 'egg-cors'
+  },
+  // io: {
+  //   enable: true,
+  //   package: 'egg-socket.io',
+  // }
 };

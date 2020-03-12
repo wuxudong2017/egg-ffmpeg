@@ -11,7 +11,7 @@ const path = require('path')
  * @param {object} movie  {filePath:存放地址,_id:唯一标识}
  * @return  {function}
  */
-exports.transcode = function (movie,setting) {
+exports.transcode = function (movie, setting) {
     const filePath = movie.filePath;
     const id = movie._id;
     const des = path.join(__dirname, '../public/video', id);
@@ -30,7 +30,10 @@ exports.transcode = function (movie,setting) {
     return new Promise((resolve, reject) => {
         ffmpeg.ffprobe(filePath, function (err, metadata) {
             if (err) {
-                reject(err);
+                reject({
+                    code: 101,
+                    message: err.message
+                });
             }
             let wmimage = setting.watermarkPath;
             let hd = setting.hd * 1;
@@ -122,19 +125,25 @@ exports.transcode = function (movie,setting) {
                     if (srtexists) {
                         ffmpegtransandchunk(des, filePath, config, vf, id).then(res => {
                             resolve(res)
-                        });
+                        }).catch(err => {
+                            reject(err)
+                        })
                     } else {
                         chunk(filePath, des, id, config, vf, tsjiami);
                     }
                 } else {
                     ffmpegtransandchunk(des, filePath, config, vf, id).then(res => {
                         resolve(res)
-                    });
+                    }).catch(err => {
+                        reject(err)
+                    })
                 }
             } else {
                 ffmpegtransandchunk(des, filePath, config, vf, id).then(res => {
                     resolve(res)
-                });
+                }).catch(err => {
+                    reject(err)
+                })
             }
         })
     })
@@ -159,11 +168,14 @@ function ffmpegtransandchunk(des, filePath, config, vf) {
             })
             .on('error', function (err, stdout, stderr) {
                 console.log('Cannot process video: ' + filePath + err.message);
-                reject('Cannot process video: ' + filePath + err.message)
+                reject({
+                    code: 102,
+                    message: 'Cannot process video: ' + filePath + err.message
+                })
             })
             .on('end', function () {
                 screenshots(filePath, des);
-                resolve({ code: 1, message: '转码并切片完成' })
+                resolve({ code: 200, message: '转码并切片完成' })
                 console.log('转码并切片完成')
             })
             .run()

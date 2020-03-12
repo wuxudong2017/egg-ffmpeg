@@ -104,6 +104,16 @@ module.exports = appInfo => {
       // zip
       '.zip', '.rar', '.7z']
   }
+  // scoket io config
+  // config.io = {
+  //   init: {}, // passed to engine.io
+  //   namespace: {
+  //     '/': {
+  //       connectionMiddleware: [],
+  //       packetMiddleware: [],
+  //     },
+  //   },
+  // };
 
   return config;
 };
