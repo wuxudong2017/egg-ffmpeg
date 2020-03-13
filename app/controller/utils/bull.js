@@ -11,11 +11,34 @@ class IndexController extends Controller {
             offset = query.offset || 1,
             queue = query.queue || 'queue1',
             asc = query.asc || true,
-            types = query.types || 'completed';
+            types = query.types || 'waiting,active,completed,failed,delayed,paused,';
         const typesArr = types.split(',');
-        const rows = await app.getQueue(queue).getJobs(typesArr, (offset - 1) * limit, offset * limit - 1, asc)
-        const count = await app.getQueue(queue).getJobCounts()
-        ctx.success({ rows, count })
+        let rows = await app.getQueue(queue).getJobs(typesArr, (offset - 1) * limit, offset * limit - 1, asc);
+        const count = await app.getQueue(queue).getJobCounts();
+        let arr = [], newData = [];
+        rows.forEach(item => { arr.push(item.getState()) })
+        await Promise.all(arr).then(states => {
+            rows.forEach((item, i) => {
+                newData.push({
+                    id: item.id,
+                    name: item.name,
+                    data: item.data,
+                    opts: item.opts,
+                    progress: item.progress,
+                    delay: item.delay,
+                    timestamp: item.timestamp,
+                    attemptsMade: item.attemptsMade,
+                    failedReason: item.failedReason,
+                    stacktrace: item.stacktrace,
+                    returnvalue: item.returnvalue,
+                    finishedOn: item.finishedOn,
+                    processedOn: item.processedOn,
+                    state: states[i]
+                })
+            })
+        })
+
+        ctx.success({ rows: newData, count })
     }
     // 清空所有队列任务
     async jobEmpty() {

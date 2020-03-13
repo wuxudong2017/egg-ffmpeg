@@ -169,6 +169,8 @@ function ffmpegtransandchunk(des, filePath, config, vf) {
             .on('start', function (cmd) {
                 console.log(cmd)
                 console.log('转码并切片开始')
+            }).on('progress',function(progress){
+                console.log('Processing: ' + progress.percent + '% done');
             })
             .on('error', function (err, stdout, stderr) {
                 console.log('Cannot process video: ' + filePath + err.message);

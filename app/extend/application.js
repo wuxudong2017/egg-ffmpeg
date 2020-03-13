@@ -93,7 +93,7 @@ module.exports = {
       } else {
         status = 'failed'
       }
-      await this.model.File.update({ _id: params._id }, { status })
+      await this.model.File.updateOne({ _id: params._id }, { status })
     } catch (error) {
       throw Error(error)
     }

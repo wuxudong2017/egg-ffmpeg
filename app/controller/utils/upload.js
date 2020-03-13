@@ -67,7 +67,9 @@ class UploadController extends Controller {
         filePath: target,
         _id: result._id,
         folderName,
-        type:12
+        type:12,
+        originalName,
+        suffix
       },
       name: '视频转码队列',
     }])

@@ -1,13 +1,18 @@
-
+const fs = require('fs')
 module.exports = app => {
     return {
         handle: async (job, done) => {
             // 任务处理函数
             console.log('/**********开始处理***************/')
             try {
-                const data = JSON.parse(JSON.stringify(job.data))
-                await app.ffmpeg(data)
-                return done();
+                const state = fs.existsSync(job.data.filePath);
+                if(!state){
+                    const err = 'fail: connot find file' + job.data.filePath;
+                    return done(new Error(err))
+                }
+                //   开始转码
+                await app.ffmpeg(job.data)
+                return done( );
             } catch (err) {
                 return done(new Error(err))
             }
